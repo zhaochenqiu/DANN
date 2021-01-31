@@ -1,0 +1,54 @@
+training frames are checking
+generating histogram
+completed, total time: 8.273664712905884
+detecting foreground
+completed, total time: 9.741039514541626
+eva Re: 0.0
+eva Pr: 0.0
+eva Fm: 0.0
+generating histogram
+completed, total time: 0.6192464828491211
+detecting foreground
+completed, total time: 7.986841201782227
+eva Re: 0.9376053962900506
+eva Pr: 0.996415770609319
+eva Fm: 0.9661164205039097
+generating histogram
+completed, total time: 0.6700131893157959
+detecting foreground
+completed, total time: 8.069983005523682
+eva Re: 0.9671052631578947
+eva Pr: 0.9959349593495935
+eva Fm: 0.9813084112149532
+generating histogram
+completed, total time: 0.815293550491333
+detecting foreground
+completed, total time: 7.941469430923462
+eva Re: 0.8367346938775511
+eva Pr: 0.9959514170040485
+eva Fm: 0.9094269870609981
+generating histogram
+completed, total time: 1.3586506843566895
+detecting foreground
+completed, total time: 7.936634302139282
+eva Re: 0.9477958236658933
+eva Pr: 0.991504854368932
+eva Fm: 0.9691577698695135
+generating histogram
+completed, total time: 0.7231364250183105
+detecting foreground
+completed, total time: 7.965339183807373
+eva Re: 0.860248447204969
+eva Pr: 0.9975990396158463
+eva Fm: 0.92384658143413
+generating histogram
+completed, total time: 0.6639723777770996
+detecting foreground
+completed, total time: 7.960160493850708
+eva Re: 0.0
+eva Pr: 0.0
+eva Fm: 0.0
+torch.Size([288, 432])
+empty groundtruth frame: frame_idx =  0
+
+

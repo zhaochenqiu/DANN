@@ -1,0 +1,4 @@
+python -u paras_v59.py lowFramerate turnpike_0_5fps v_final     0 953  1075  1011   837  1089  1142   822   912  1122   886   928   800   843   887   930   974  1018  1061  1105  1149 >> results_lowFramerate_turnpike_0_5fps_v_final.output 
+python -u paras_v59.py lowFramerate port_0_17fps v_final        0 1075  1246  1889  1318  1856  1462  1559  1168  1935  1988  1000    1499    1749    1999 >> results_lowFramerate_port_0_17fps_v_final.output 
+python -u paras_v59.py lowFramerate tramCrossroad_1fps v_final  0 414  608  491  647  400  431  462  493  524  555 573 586  617  649 >> results_lowFramerate_tramCrossroad_1fps_v_final.output 
+python -u paras_v59.py lowFramerate tunnelExit_0_35fps v_final  0 2757  2996  2401  2798  2224  2051  2708  2595  2329  2646  2000  2374  2499   2999 >> results_lowFramerate_tunnelExit_0_35fps_v_final.output

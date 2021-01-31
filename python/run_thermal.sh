@@ -1,0 +1,5 @@
+python -u paras_v59.py thermal corridor v_final 1 2031  5034  1201  2531  1194  1136  1247  1690  1559  1197  1650   500  1112  1725  2337  2950  3562  4175  4787  5400 >> results_thermal_corridor_v_final.output
+python -u paras_v59.py thermal diningRoom v_final 1 3159  2588  2836   989  2754  1935   906  1490  1620  2436  2391   700  1075  1450  1825  2200  2575  2950  3325  3700 >> results_thermal_diningRoom_v_final.output
+python -u paras_v59.py thermal lakeSide v_final 1 4765  1818  6106  6030  3366  5104  1690  3042  5289  5100  5788  1000  1687  2375  3062  3750  4437  5125  5812  6500 >> results_thermal_lakeSide_v_final.output
+python -u paras_v59.py thermal library v_final 1 1087  3829  4011  1733  4364  3568  1648  2680  3547  4016  4024   600  1137  1675  2212  2750  3287  3825  4362  4900 >> results_thermal_library_v_final.output
+python -u paras_v59.py thermal park v_final 1 371  298  343  334  471  532  559  388  567  546  495  250  293  337  381  425  468  512  556  600 >> results_thermal_park_v_final.output

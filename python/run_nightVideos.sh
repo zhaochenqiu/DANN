@@ -1,0 +1,6 @@
+python -u paras_v59.py nightVideos bridgeEntry v_final 1 1674  1184  1675  1215  1606  1384  1413  1111  1112  1743  1745  1000  1093  1187  1280  1374  1468  1561  1655  1749 >> results_nightVideos_bridgeEntry_v_final.output
+python -u paras_v59.py nightVideos busyBoulvard v_final 1 818  1209   926   989  1173  1743   763  1356  1254  1674   821   730   856   983  1110  1237  1363  1490  1617  1744 >> results_nightVideos_busyBoulvard_v_final.output 
+python -u paras_v59.py nightVideos fluidHighway v_final 1 449  725  515  537  586  775  635  404  845  493  682  400  520  640  760  881 >> results_nightVideos_fluidHighway_v_final.output 
+python -u paras_v59.py nightVideos streetCornerAtNight v_final 1 1505   969  2837  1167  2678  1653  1766   886   887  2895  2972   800  1074  1349  1624  1899  2174  2449  2724  2999 >> results_nightVideos_streetCornerAtNight_v_final.output 
+python -u paras_v59.py nightVideos tramStation v_final 1 1005   862  1549   919  1422  1215  1266   664   709  1634  1687   500   656   812   968  1124  1280  1436  1592  1749 >> results_nightVideos_tramStation_v_final.output
+python -u paras_v59.py nightVideos winterStreet v_final 1 1242  1047  1313  1315   924  1316  1161  1272  1010  1314   963   900   954  1009  1064  1119  1174  1229  1284  1339 >> results_nightVideos_winterStreet_v_final.output

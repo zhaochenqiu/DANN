@@ -1,0 +1,6 @@
+python -u paras_v59.py shadow backdoor v_final 1 1841  1539  1444  1825  1720  1745  1907  1956  1926  1874  1401   400   600   800  1000  1200  1400  1600  1800  2000 >> results_shadow_backdoor_v_final.output 
+python -u paras_v59.py shadow bungalows v_final 1 1155   647  1439   714  1353  1058  1107   397   466  1524  1662   300   475   650   825  1000  1175  1350  1525  1700 >> results_shadow_bungalows_v_final.output 
+python -u paras_v59.py shadow busStation v_final 1 1036   676   469   504   616   959   320   734   677   857   411   300   418   537   656   775   893  1012  1131  1250 >> results_shadow_busStation_v_final.output 
+python -u paras_v59.py shadow copyMachine v_final 1 2143   935  2924  1104  2694  1905  1980   781   851  3095  3393   500   862  1225  1587  1950  2312  2675  3037  3400 >> results_shadow_copyMachine_v_final.output 
+python -u paras_v59.py shadow cubicle v_final 1 5971  2528  6487  2764  6344  5493  5653  1582  1973  6622  7144  1100  1887  2675  3462  4250  5037  5825  6612  7400 >> results_shadow_cubicle_v_final.output 
+python -u paras_v59.py shadow peopleInShade v_final 1 334   695   494   309   764   918   663  1073   879   611   968   250   368   487   605   724   843   961  1080  1199 >> results_shadow_peopleInShade_v_final.output 

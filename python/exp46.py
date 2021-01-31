@@ -1,0 +1,321 @@
+import sys
+sys.path.append("/home/cqzhao/projects/matrix/")
+sys.path.append("../../")
+
+
+import matplotlib.pyplot as plt
+
+import time
+
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torch.nn.functional as F
+
+
+from common_py.dataIO import loadImgs_pytorch
+
+
+from function.prodis import getEmptyCF
+from function.prodis import getEmptyCF_plus
+from function.prodis import getHist_plus
+from function.prodis import ProductDis_plus
+from function.prodis import ProductDis_multi
+from function.prodis import getRandCF
+from function.prodis import getRandCF_plus
+
+from function.prodis import ProDisFunction as ProF
+
+from torch.autograd import Variable
+
+
+
+class ClassNet(nn.Module):
+
+    def __init__(self, input_size=1000, hidden_size=2000):
+        super().__init__()
+
+        self.fc1 = nn.Linear(input_size, hidden_size)
+        self.fc2 = nn.Linear(hidden_size, 2)
+
+
+        self.hidden_size = hidden_size
+
+
+    def forward(self, input):
+        x = F.relu(self.fc1(input))
+
+        x = x.view(-1, self.hidden_size)
+
+        x = self.fc2(x)
+
+        return F.log_softmax(x, dim=1)
+
+
+
+def main():
+
+    use_cuda = torch.cuda.is_available()
+
+
+    print("------------")
+    print(use_cuda)
+    print("------------")
+
+    torch.manual_seed(0)
+
+    device = torch.device("cuda:0" if use_cuda else "cpu")
+
+#    kwargs = {'num_workers': 1, 'pin_memory': True} if use_cuda else {}
+
+
+#    prodis_lay = ProductDis.apply
+    prodis_lay = ProductDis_plus.apply
+
+    prodis_mul = ProductDis_multi.apply
+
+
+    left = -10
+    right = 10
+    delta = 0.1
+
+
+    with torch.no_grad():
+        num = 10000000
+        border = 0.1
+        params = {'zero_swap': True, 'zero_approx': True, 'normal': False}
+
+        # preparing the training data
+        X1 = torch.empty(num).normal_(mean = 0, std = 1)
+        X2 = torch.empty(num).normal_(mean = 0, std = 1.2)
+
+
+        c_X1, f_X1 = getHist_plus(X1, border, left, right)
+        c_X2, f_X2 = getHist_plus(X2, border, left, right)
+
+
+
+#     c_W, f_W1 = getRandCF(left, right, delta)
+#     c_W, f_W2 = getRandCF(left, right, delta)
+#
+#     f_W = torch.cat((f_W1.unsqueeze(0), f_W2.unsqueeze(0)), dim = 0)
+#     print("f_W.shape = ", f_W.shape)
+
+
+
+    c_X = torch.cat((f_X1, f_X2), dim = 0)
+
+    print("c_X.shape:", c_X.shape)
+
+    print("borderline -----------------------")
+
+
+    num_dis = 200
+
+    c_W, f_W = getRandCF_plus(left, right, delta, num_dis)
+    c_Z, f_Z = getEmptyCF_plus(left - 2, right + 2, delta, num_dis)
+
+
+
+
+
+    c_X1 = c_X1.to(device)
+    f_X1 = f_X1.to(device)
+
+    c_X2 = c_X2.to(device)
+    f_X2 = f_X2.to(device)
+
+
+    c_W = c_W.to(device)
+    f_W = f_W.to(device)
+
+
+    c_Z = c_Z.to(device)
+    f_Z = f_Z.to(device)
+
+
+
+
+
+    f_W = Variable(f_W, requires_grad = True)
+    optim_W = optim.Adam([f_W], lr=0.01, amsgrad=True)
+
+
+    classnet = ClassNet(20100,2000).to(device)
+    optim_net = optim.Adam(classnet.parameters(), lr = 0.001)
+
+
+    class_weights = torch.FloatTensor([0.5, 0.5]).to(device)
+    loss_func = torch.nn.NLLLoss(weight=class_weights, reduction='sum').to(device)
+
+
+    target0 = 0
+    target1 = 1
+
+    target0 = torch.tensor([target0])
+    target1 = torch.tensor([target1])
+
+    target0 = target0.to(device, dtype = torch.int64)
+    target1 = target1.to(device, dtype = torch.int64)
+
+    target = torch.cat((target0, target1), dim=0)
+
+
+#     temp = torch.abs(f_X1 - f_X1)
+#
+#     temp1 = temp + 1
+#     temp2 = temp + 2
+#     temp3 = temp + 3
+#
+#
+#
+#     print("temp1 = ", temp1)
+#
+#
+#
+#     f_MX = torch.cat((temp1.unsqueeze(0), temp2.unsqueeze(0), temp3.unsqueeze(0)), dim = 0)
+#
+#
+#
+#     print("f_MX.shape:", f_MX.shape)
+#
+#     print("f_MX:", f_MX)
+#
+#
+#     test1 = f_MX[:].expand(241, 3, 105)
+#
+#     print("test1.shape:", test1.shape)
+#     test2 = test1.permute(1, 2, 0)
+#     print("test2.shape:", test2.shape)
+#
+#
+#     print("test1:", test2[0])
+#     print("test1:", test2[1])
+#     print("test1:", test2[2])
+
+
+
+#    test2 = test1.reshape(3, 105, 241)
+
+#    test = torch.reshape( f_MX.expand(3, 105 * 241), (3, 105, 241))
+#    print('test:', test)
+
+
+    starttime = time.time()
+
+    c_Z1, f_Z1 = prodis_mul(c_X1, f_X1, c_W, f_W, c_Z, border, params)
+
+    endtime = time.time()
+
+    print("total time:", endtime - starttime)
+
+    print("f_Z1.shape:", f_Z1.shape)
+
+    print(f_X1.shape)
+
+
+
+#     for i in range(50):
+#
+#         starttime = time.time()
+#         c_Z1, f_Z1 = ProF.productDis_plus(c_X1, f_X1, c_W, f_W, c_Z, border, params, prodis_lay)
+#         c_Z2, f_Z2 = ProF.productDis_plus(c_X2, f_X2, c_W, f_W, c_Z, border, params, prodis_lay)
+#         endtime = time.time()
+#
+#         print("product time:", endtime - starttime)
+#
+#
+#         row, column = f_Z1.shape
+#
+#         f_Z1 = f_Z1.reshape(1, row*column)
+#         f_Z2 = f_Z2.reshape(1, row*column)
+#
+#
+#
+#         f_F = torch.cat((f_Z1, f_Z2), dim = 0)
+#
+#
+#         starttime = time.time()
+#         output = classnet(f_F)
+#         endtime = time.time()
+#
+#         print("network time:", endtime - starttime)
+#
+#
+#
+#         loss = loss_func(output, target)
+#
+#
+#         print("loss = ", loss)
+#
+#
+#         optim_W.zero_grad()
+#         optim_net.zero_grad()
+#
+#         loss.backward(retain_graph=True)
+#
+#         optim_W.step()
+#         optim_net.step()
+#
+
+
+
+
+
+
+#     for i in range(50):
+#
+# #        c_Z1, f_Z1 = prodis_lay(c_X1, f_X1, c_W, f_W[0], c_Z, f_Z, border, params)
+# #        c_Z2, f_Z2 = prodis_lay(c_X1, f_X1, c_W, f_W[1], c_Z, f_Z, border, params)
+#
+#         c_Z1, f_Z1 = ProF.productDis_plus(c_X1, f_X1, c_W, f_W, c_Z, f_Z, border, params, prodis_lay)
+#         c_Z2, f_Z2 = ProF.productDis_plus(c_X2, f_X2, c_W, f_W, c_Z, f_Z, border, params, prodis_lay)
+#
+#
+#
+#
+#
+#
+# #     c_Z, f_Z = ProF.productDis_plus(c_X1, f_X1, c_W, f_W, c_Z, f_Z, border, params, prodis_lay)
+# #
+# #     print("f_Z.shape = ", f_Z.shape)
+#
+#
+#
+#
+#
+#
+#         c_Z3, f_Z3 = prodis_lay(c_X2, f_X2, c_W, f_W[0], c_Z, f_Z, border, params)
+#         c_Z4, f_Z4 = prodis_lay(c_X2, f_X2, c_W, f_W[1], c_Z, f_Z, border, params)
+#
+#
+#         f_F1 = torch.cat((f_Z1, f_Z2), dim = 0)
+#         f_F2 = torch.cat((f_Z3, f_Z4), dim = 0)
+#
+#
+#         f_F = torch.cat((f_F1.unsqueeze(0), f_F2.unsqueeze(0)), dim = 0)
+#
+#
+#
+#         output = classnet(f_F)
+#
+#
+#         loss = loss_func(output, target)
+#
+#
+#         print("loss = ", loss)
+#
+#
+#         optim_W.zero_grad()
+#         optim_net.zero_grad()
+#
+#         loss.backward(retain_graph=True)
+#
+#         optim_W.step()
+#         optim_net.step()
+
+
+
+
+if __name__ == '__main__':
+    main()
